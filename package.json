@@ -1,0 +1,30 @@
+{
+  "name": "homeservice-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pd96-dev/homeservice-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pd96-dev/homeservice-server/issues"
+  },
+  "homepage": "https://github.com/pd96-dev/homeservice-server#readme",
+  "dependencies": {
+    "cros": "^1.0.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-promise-router": "^4.1.1",
+    "gitconfig": "^2.0.8",
+    "gitignore": "^0.7.0",
+    "nodemon": "^2.0.21",
+    "pg": "^8.10.0"
+  }
+}
