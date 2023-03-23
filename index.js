@@ -12,6 +12,7 @@ const pool = new Pool({
 });
 const cors = require("cors");
 const usersRouter = require('./routes/routeUsers')
+const propertyRouter = require('./routes/routeProperty')
 
 app.use(bodyParser.json())
 app.use(
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/users", usersRouter);
+app.use("/api/property", propertyRouter);
 
 
 // TEST index
