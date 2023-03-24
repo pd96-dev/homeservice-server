@@ -23,6 +23,12 @@ app.use(
 app.use(express.json());
 app.use(cors());
 
+//ROUTES
+
+//Register and login
+
+app.use("/auth", require("./routes/jwtAuth"));
+
 app.use("/api/users", usersRouter);
 app.use("/api/property", propertyRouter);
 
@@ -35,18 +41,5 @@ app.get('/', (request, response) => {
 })
 
 
-
-
-
-
-// app.get("/api/users", (req, res) => {
-//     pool
-//       .query("SELECT * FROM users;")
-//       .then((data) => {
-//         console.log(data);
-//         res.json(data.rows);
-//       })
-//       .catch((e) => res.status(500).json({ message: e.message }));
-//   });
 
 app.listen(PORT, () => console.log(`server is up on port ${PORT}`));
