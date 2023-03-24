@@ -2,9 +2,13 @@ const router = require("express").Router();
 const pool = require("../db");
 const bcrypt = require("bcrypt");
 const jwtGenerator = require("../utils/jwtGenerator");
+const validInfo = require("../middleware/validInfo")
+const authorization = require("../middleware/authorization");
+
+
 //register 
 
-router.post("/register", async (req, res) => {
+router.post("/register", validInfo, async (req, res) => {
     try {
 
         // 1 destructure the req.body (role, email, password)
@@ -41,7 +45,7 @@ router.post("/register", async (req, res) => {
 
 // Login Route
 
-router.post("/login", async (req,res) => {
+router.post("/login", validInfo, async (req,res) => {
     try {
 
         //1 destructure the req.body
@@ -76,5 +80,17 @@ router.post("/login", async (req,res) => {
     }
 });
 
+
+router.get("/isverify", authorization, async (req,res) => {
+    console.log("whaaatt!");
+    try {
+
+        res.json(true);
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("server Error"); 
+    }
+})
 
 module.exports = router;
