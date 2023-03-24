@@ -32,6 +32,8 @@ app.use("/api/auth", require("./routes/jwtAuth"));
 app.use("/api/users", usersRouter);
 app.use("/api/property", propertyRouter);
 
+app.use("/api/admin", require("./routes/admin"));
+
 
 // TEST index
 app.get('/', (request, response) => {
