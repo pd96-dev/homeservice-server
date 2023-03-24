@@ -28,12 +28,12 @@ const getUserById = (req, res) => {
 };
 
 const createUser = (req, res) => {
-    const { firstname, lastname, email, username, phone } =
+    const { firstname, lastname, email, username, phone, role } =
       req.body; // form data from body
     pool
       .query(
-        "INSERT INTO users (firstname ,lastname, email,	username, phone) VALUES ($1,$2,$3,$4,$5) RETURNING *;",
-        [firstname ,lastname, email, username, phone]
+        "INSERT INTO users (firstname ,lastname, email,	username, phone, role) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;",
+        [firstname ,lastname, email, username, phone, role]
       )
       .then((data) => {
         console.log(data);
@@ -44,12 +44,12 @@ const createUser = (req, res) => {
 
 const updateUser = (req, res) => {
     const id = req.params.id;
-    const {firstname ,lastname, email, username, phone } =
+    const {firstname ,lastname, email, username, phone, role } =
       req.body; // form data from body
     pool
       .query(
-        "UPDATE users SET firstname=$1,lastname=$2,email=$3 ,username=$4,phone=$5 WHERE userid=$6 RETURNING *;",
-        [firstname ,lastname, email, username, phone, id]
+        "UPDATE users SET firstname=$1,lastname=$2,email=$3 ,username=$4,phone=$5,role=$6 WHERE userid=$7 RETURNING *;",
+        [firstname ,lastname, email, username, phone, role, id]
       )
       .then((data) => {
         console.log(data);
