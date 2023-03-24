@@ -1,8 +1,9 @@
-const pool = require("../db")
+const pool = require("../db");
 
-const getAllUsers = (req, res) => {
+const getAllTasks = (req, res) => {
+    const id = req.params.id;
     pool
-      .query("SELECT * FROM users;")
+      .query("SELECT * FROM task WHERE userid=$1 ;", [id])
       .then((data) => {
         console.log(data);
         res.json(data.rows);
@@ -10,45 +11,44 @@ const getAllUsers = (req, res) => {
       .catch((e) => res.status(500).json({ message: e.message }));
 };
 
-const getUserById = (req, res) => {
+const getTaskById = (req, res) => {
     const id = req.params.id;
     pool
-      .query("SELECT * FROM users WHERE userid=$1;", [id])
+      .query("SELECT * FROM task WHERE propertyid=$1;", [id])
       .then((data) => {
         //   console.log(data);
         if (data.rowCount === 0) {
-          res.status(404).json({ message: "User not found" });
+          res.status(404).json({ message: "Task not found" });
         }
         res.json(data.rows[0]);
       })
       .catch((e) => res.status(500).json({ message: e.message }));
 };
 
-const createUser = (req, res) => {
-    const { firstname, lastname, email, username, phone, role } =
-      req.body; // form data from body
-    pool
-      .query(
-        
-        "INSERT INTO users (firstname ,lastname, email,	username, phone , role) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;",
-        [firstname ,lastname, email, username, phone, role]
-      )
-      .then((data) => {
-        console.log(data);
-        res.status(201).json(data.rows[0]);
-      })
-      .catch((e) => res.status(500).json({ message: e.message }));
-  };
-
-const updateUser = (req, res) => {
+const createTask = (req, res) => {
     const id = req.params.id;
-    const {firstname ,lastname, email, username, phone, role } =
+    const { title , description , status, date, propertyid } =
       req.body; // form data from body
     pool
       .query(
+        "INSERT INTO task (title, description, status, date, propertyid) VALUES ($1,$2,$3,$4,$5) RETURNING *;",
+        [ title, description, status, date, propertyid]
+      )
+      .then((data) => {
+        console.log(data);
+        res.status(201).json(data.rows[0]);
+      })
+      .catch((e) => res.status(500).json({ message: e.message }));
+  };
 
-        "UPDATE users SET firstname=$1,lastname=$2,email=$3 ,username=$4,phone=$5, role=$6 WHERE userid=$7 RETURNING *;",
-        [firstname ,lastname, email, username, phone, role, id]
+const updateTask = (req, res) => {
+    const id = req.params.id;
+    const {title, description, status, date, propertyid} =
+      req.body; // form data from body
+    pool
+      .query(
+        "UPDATE task SET description=$1, address=$2, city=$3 ,state=$4, country=$5 WHERE propertyid=$6 RETURNING *;",
+        [title , description , status, date, propertyid]
       )
       .then((data) => {
         console.log(data);
@@ -58,10 +58,10 @@ const updateUser = (req, res) => {
   };
 
 
-const deleteUser = (req, res) => {
+const deleteTask = (req, res) => {
     const id = Number(req.params.id);
     pool
-      .query("DELETE FROM users WHERE userid=$1 RETURNING *;", [id])
+      .query("DELETE FROM task WHERE propertyid=$1 RETURNING *;", [id])
       .then((data) => {
         console.log(data);
         res.json(data.rows[0]);
@@ -70,9 +70,9 @@ const deleteUser = (req, res) => {
   };
 
 module.exports = {
-    getAllUsers,
-    getUserById,
-    createUser,
-    updateUser,
-    deleteUser,
+    getAllTasks,
+    getTaskById,
+    createTask,
+    updateTask,
+    deleteTask,
 };
