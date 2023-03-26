@@ -35,7 +35,7 @@ router.post("/register", validInfo, async (req, res) => {
 
         // 5 Generating JWT token
 
-        const jwtToken = jwtGenerator(newUser.rows[0].user_id);
+        const jwtToken = jwtGenerator(newUser.rows[0].userid);
 
         return res.json({ jwtToken });
       } catch (err) {
@@ -66,8 +66,11 @@ router.post("/login", validInfo, async (req, res) => {
       if (!validPassword) {
         return res.status(401).json("Invalid Credential");
       }
+
+      const userId = user.rows[0].userid;
+
       const jwtToken = jwtGenerator(user.rows[0].userid);
-      return res.json({ jwtToken });
+      return res.json({ jwtToken, userId });
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server error");
@@ -75,7 +78,7 @@ router.post("/login", validInfo, async (req, res) => {
   });
 
 router.get("/isverify", authorization, async (req,res) => {
-    console.log("whaaatt!");
+
     try {
 
         res.json(true);

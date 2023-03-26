@@ -38,6 +38,7 @@ app.use(cors());
 
 app.use("/api/auth", require("./routes/jwtAuth"));
 
+
 app.use("/api/users", usersRouter);
 app.use("/api/property", propertyRouter);
 
