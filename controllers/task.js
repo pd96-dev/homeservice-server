@@ -3,7 +3,7 @@ const pool = require("../db");
 const getAllTasks = (req, res) => {
     const id = req.params.id;
     pool
-      .query("SELECT * FROM task WHERE userid=$1 ;", [id])
+      .query("SELECT * FROM task WHERE propertyid=$1 ;", [id])
       .then((data) => {
         console.log(data);
         res.json(data.rows);
@@ -47,7 +47,7 @@ const updateTask = (req, res) => {
       req.body; // form data from body
     pool
       .query(
-        "UPDATE task SET description=$1, address=$2, city=$3 ,state=$4, country=$5 WHERE propertyid=$6 RETURNING *;",
+        "UPDATE task SET title=$1, description=$2, status=$3, date=$4  WHERE propertyid=$5 RETURNING *;",
         [title , description , status, date, propertyid]
       )
       .then((data) => {
