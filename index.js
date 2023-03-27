@@ -21,11 +21,13 @@ const { Pool } = require("pg");
 const pool = new Pool({
   connectionString: process.env.ELEPHANT_SQL_CONNECTION_STRING,
 });
+
 const cors = require("cors");
 const usersRouter = require("./routes/routeUsers");
 const propertyRouter = require("./routes/routeProperty");
 const propertyImageRouter = require("./routes/routePropertyImage");
-
+const categoryRouter = require("./routes/routeCategory");
+const serviceProviderRouter = require("./routes/routeServiceProvider");
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
@@ -38,12 +40,12 @@ app.use(cors());
 //ROUTES
 
 //Register and login
-
 app.use("/api/auth", require("./routes/jwtAuth"));
-
 app.use("/api/users", usersRouter);
 app.use("/api/property", propertyRouter);
 app.use("/api/propertyImage", propertyImageRouter);
+app.use("/api/category", categoryRouter);
+app.use("/api/serviceProviders", serviceProviderRouter);
 
 // TEST index
 app.get("/", (request, response) => {
