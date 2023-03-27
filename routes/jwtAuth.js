@@ -16,15 +16,15 @@ router.post("/register", validInfo, async (req, res) => {
         // 2 Check if exists
         const user = await pool.query("SELECT * FROM users WHERE email =  $1", [email]);
 
-        if(user.rows.length !== 0) {
-            res.status(401).send("User already Exists")
-        }
         // 3 Bcrypt password
 
-        const saltRound = 10;
-        const salt = await bcrypt.genSalt(saltRound);
 
-        const bcryptPassword = await bcrypt.hash(password, salt);
+        if (user.rows.length > 0) {
+            return res.status(401).json("User already exist!");
+          }
+      
+          const salt = await bcrypt.genSalt(10);
+          const bcryptPassword = await bcrypt.hash(password, salt);
 
         // 4 Enter the user inside the database
 
@@ -32,64 +32,62 @@ router.post("/register", validInfo, async (req, res) => {
 
         // 5 Generating JWT token
 
-        const token = jwtGenerator(newUser.rows[0].userid);
+        const jwtToken = jwtGenerator(newUser.rows[0].userid);
 
-        res.json({ token });
-        
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).send("server Error");
-    }
+        const userId = newUser.rows[0].userid;
 
-});
+        return res.json({ jwtToken, userId });
+
+      } catch (error) {
+
+        res.status(500).json({ message: error.message })
+      }
+    });
 
 // Login Route
 
-router.post("/login", validInfo, async (req,res) => {
+router.post("/login", validInfo, async (req, res) => {
+    const { email, password } = req.body;
+  
     try {
+      const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+        email
+      ]);
+  
+      if (user.rows.length === 0) {
+        return res.status(401).json("Invalid Credential");
+      }
+  
+      const validPassword = await bcrypt.compare(
+        password,
+        user.rows[0].password
+      );
+  
+      if (!validPassword) {
+        return res.status(401).json("Invalid Credential");
+      }
 
-        //1 destructure the req.body
+      const userId = user.rows[0].userid;
 
-        const {email, password} = req.body;
+      const jwtToken = jwtGenerator(user.rows[0].userid);
 
-        //2 check if user doesn't exists (if not error)
-
-        const user = await pool.query("SELECT * FROM users WHERE email = $1", [email])
-
-        if (user.rows[0].length === 0) {
-            return res.status(401).json("Password or Email is incorrect");
-        }
-
-        //3 check if incomming password is the same as database
-
-        const validPassword =  await bcrypt.compare(password, user.rows[0].password);
-
-        if(!validPassword) {
-            return res.status(401).json("Password or Email is incorrect");
-        }
-        
-        //4 giv the jwt token
-
-        const token = jwtGenerator(user.rows[0].userid);
-
-        res.json({token});
+      return res.json({ jwtToken, userId });
 
     } catch (error) {
-        console.log(error.message);
-        res.status(500).send("server Error"); 
-    }
-});
 
+      res.status(500).json({ message: error.message })
+    }
+  });
 
 router.get("/isverify", authorization, async (req,res) => {
-    console.log("whaaatt!");
+
     try {
 
         res.json(true);
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).send("server Error"); 
+        res.status(500).json({ message: error.message })
     }
 })
 

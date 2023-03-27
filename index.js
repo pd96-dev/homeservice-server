@@ -17,15 +17,12 @@ cloudinary.config({
 
 // DATABASE
 const PORT = process.env.PORT || 8000;
-const { Pool } = require("pg");
-const pool = new Pool({
-  connectionString: process.env.ELEPHANT_SQL_CONNECTION_STRING,
-});
 const cors = require("cors");
 const usersRouter = require("./routes/routeUsers");
 const propertyRouter = require("./routes/routeProperty");
 const propertyImageRouter = require("./routes/routePropertyImage");
 const taskRouter= require('./routes/routeTask')
+const categoryRouter = require("./routes/routeCategory");
 
 app.use(bodyParser.json());
 app.use(
@@ -39,18 +36,14 @@ app.use(cors());
 //ROUTES
 
 //Register and login
-
 app.use("/api/auth", require("./routes/jwtAuth"));
-
 app.use("/api/users", usersRouter);
-app.use("/api/property", propertyRouter);
 app.use("/api/task", taskRouter);
-
-
 app.use("/api/admin", require("./routes/admin"));
-
-
+app.use("/api/property", propertyRouter);
 app.use("/api/propertyImage", propertyImageRouter);
+app.use("/api/category", categoryRouter);
+
 
 
 // TEST index
