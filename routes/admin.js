@@ -9,7 +9,7 @@ router.post("/:id", authorization,  async (req, res) => {
     try {
         console.log(id)
 
-        const user = await pool.query("SELECT email, firstname, lastname, phone, username, role FROM users WHERE userid = $1", [id]);
+        const user = await pool.query("SELECT email, firstname, lastname, phone, username FROM users WHERE userid = $1", [id]);
 
         res.json(user.rows[0]);
         

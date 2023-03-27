@@ -12,23 +12,28 @@ router.post("/register", validInfo, async (req, res) => {
     try {
 
         // 1 destructure the req.body (role, email, password)
-        const { role, email, password } = req.body;
+        const { email, password, confirmPass } = req.body;
         // 2 Check if exists
+
+        if (password !== confirmPass) {
+          return res.status(401).json("Passwords do not match!");
+        }
+
         const user = await pool.query("SELECT * FROM users WHERE email =  $1", [email]);
 
         // 3 Bcrypt password
 
 
-        if (user.rows.length > 0) {
-            return res.status(401).json("User already exist!");
-          }
+        if (user.rows.length !== 0) {
+            return res.status(401).json("User already exists!");
+        }
       
           const salt = await bcrypt.genSalt(10);
           const bcryptPassword = await bcrypt.hash(password, salt);
 
         // 4 Enter the user inside the database
 
-        const newUser = await pool.query("INSERT INTO users (role, email, password) VALUES ($1, $2, $3) RETURNING *", [role, email, bcryptPassword]) ;
+        const newUser = await pool.query("INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *", [email, bcryptPassword]) ;
 
         // 5 Generating JWT token
 
