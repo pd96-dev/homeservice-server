@@ -23,6 +23,8 @@ const propertyRouter = require("./routes/routeProperty");
 const propertyImageRouter = require("./routes/routePropertyImage");
 const categoryRouter = require("./routes/routeCategory");
 const serviceProviderRouter = require("./routes/routeServiceProvider");
+const quoteRouter = require("./routes/routeQuote");
+
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
@@ -43,6 +45,7 @@ app.use("/api/property", propertyRouter);
 app.use("/api/propertyImage", propertyImageRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/serviceProviders", serviceProviderRouter);
+app.use("/api/quotes", quoteRouter);
 
 // TEST index
 app.get("/", (request, response) => {
