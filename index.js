@@ -23,6 +23,11 @@ const propertyRouter = require("./routes/routeProperty");
 const propertyImageRouter = require("./routes/routePropertyImage");
 const taskRouter= require('./routes/routeTask')
 const categoryRouter = require("./routes/routeCategory");
+<<<<<<< HEAD
+=======
+const serviceProviderRouter = require("./routes/routeServiceProvider");
+const quoteRouter = require("./routes/routeQuote");
+>>>>>>> 309cb961d8ae9df2b3c661c7abfd3e7e14f62d47
 
 app.use(bodyParser.json());
 app.use(
@@ -43,8 +48,13 @@ app.use("/api/admin", require("./routes/admin"));
 app.use("/api/property", propertyRouter);
 app.use("/api/propertyImage", propertyImageRouter);
 app.use("/api/category", categoryRouter);
+<<<<<<< HEAD
 
 
+=======
+app.use("/api/serviceProviders", serviceProviderRouter);
+app.use("/api/quotes", quoteRouter);
+>>>>>>> 309cb961d8ae9df2b3c661c7abfd3e7e14f62d47
 
 // TEST index
 app.get("/", (request, response) => {
