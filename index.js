@@ -17,10 +17,7 @@ cloudinary.config({
 
 // DATABASE
 const PORT = process.env.PORT || 8000;
-const { Pool } = require("pg");
-const pool = new Pool({
-  connectionString: process.env.ELEPHANT_SQL_CONNECTION_STRING,
-});
+const pool = require("./db")
 const cors = require("cors");
 const usersRouter = require("./routes/routeUsers");
 const propertyRouter = require("./routes/routeProperty");
@@ -40,6 +37,7 @@ app.use(cors());
 //Register and login
 
 app.use("/api/auth", require("./routes/jwtAuth"));
+
 
 app.use("/api/users", usersRouter);
 app.use("/api/property", propertyRouter);
