@@ -16,9 +16,6 @@ router.post("/register", validInfo, async (req, res) => {
         // 2 Check if exists
         const user = await pool.query("SELECT * FROM users WHERE email =  $1", [email]);
 
-        if(user.rows.length !== 0) {
-            res.status(401).send("User already Exists")
-        }
         // 3 Bcrypt password
 
 
@@ -36,11 +33,14 @@ router.post("/register", validInfo, async (req, res) => {
         // 5 Generating JWT token
 
         const jwtToken = jwtGenerator(newUser.rows[0].userid);
-        const userId = user.rows[0].userid;
+
+        const userId = newUser.rows[0].userid;
+
         return res.json({ jwtToken, userId });
-      } catch (err) {
-        console.error(err.message);
-        res.status(500).send("Server error");
+
+      } catch (error) {
+
+        res.status(500).json({ message: error.message })
       }
     });
 
@@ -70,10 +70,12 @@ router.post("/login", validInfo, async (req, res) => {
       const userId = user.rows[0].userid;
 
       const jwtToken = jwtGenerator(user.rows[0].userid);
+
       return res.json({ jwtToken, userId });
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server error");
+
+    } catch (error) {
+
+      res.status(500).json({ message: error.message })
     }
   });
 
@@ -85,7 +87,7 @@ router.get("/isverify", authorization, async (req,res) => {
         
     } catch (error) {
         console.log(error.message);
-        res.status(500).send("server Error"); 
+        res.status(500).json({ message: error.message })
     }
 })
 
