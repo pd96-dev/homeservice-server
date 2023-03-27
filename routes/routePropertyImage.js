@@ -1,21 +1,3 @@
-// const express = require("express");
-// const router = express.Router();
-// const {
-//   getAllPropertiesImage,
-//   getPropertyImageById,
-//   createPropertyImage,
-//   updatePropertyImage,
-//   deletePropertyImage,
-// } = require("../controllers/propertyImage");
-
-// router.get("/propertyImage/:id", getAllPropertiesImage);
-// router.get("/:id", getPropertyImageById);
-// router.post("/:id", createPropertyImage);
-// router.put("/:id", updatePropertyImage);
-// router.delete("/:id", deletePropertyImage);
-
-// module.exports = router;
-
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
