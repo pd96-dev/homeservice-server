@@ -18,7 +18,7 @@ const getPropertyById = (req, res) => {
       .then((data) => {
         //   console.log(data);
         if (data.rowCount === 0) {
-          res.status(404).json({ message: "User not found" });
+          res.status(404).json({ message: "Property not found" });
         }
         res.json(data.rows[0]);
       })

@@ -42,13 +42,12 @@ const createUser = (req, res) => {
 
 const updateUser = (req, res) => {
     const id = req.params.id;
-    const {firstname ,lastname, email, username, phone, role } =
+    const {firstname ,lastname, email, username, phone } =
       req.body; // form data from body
     pool
       .query(
-
-        "UPDATE users SET firstname=$1,lastname=$2,email=$3 ,username=$4,phone=$5, role=$6 WHERE userid=$7 RETURNING *;",
-        [firstname ,lastname, email, username, phone, role, id]
+        "UPDATE users SET firstname=$1,lastname=$2,email=$3 ,username=$4,phone=$5 WHERE userid=$6 RETURNING *;",
+        [firstname ,lastname, email, username, phone, id]
       )
       .then((data) => {
         console.log(data);
