@@ -27,12 +27,12 @@ const getPropertyById = (req, res) => {
 
 const createProperty = (req, res) => {
     const id = req.params.id;
-    const { description, address, city, state, country, userid } =
+    const { description, address, city, state, country, userid, zipcode } =
       req.body; // form data from body
     pool
       .query(
-        "INSERT INTO property (description, address, city, state, country, userid) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;",
-        [description, address, city, state, country, userid]
+        "INSERT INTO property (description, address, city, state, country, userid, zipcode) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;",
+        [description, address, city, state, country, userid, zipcode]
       )
       .then((data) => {
         console.log(data);
@@ -43,12 +43,12 @@ const createProperty = (req, res) => {
 
 const updateProperty = (req, res) => {
     const id = req.params.id;
-    const {description, address, city, state, country} =
+    const {description, address, city, state, country, zipcode} =
       req.body; // form data from body
     pool
       .query(
-        "UPDATE property SET description=$1, address=$2, city=$3 ,state=$4, country=$5 WHERE propertyid=$6 RETURNING *;",
-        [description, address, city, state, country, id]
+        "UPDATE property SET description=$1, address=$2, city=$3 ,state=$4, country=$5, zipcode=$6 WHERE propertyid=$7 RETURNING *;",
+        [description, address, city, state, country, zipcode, id]
       )
       .then((data) => {
         console.log(data);
