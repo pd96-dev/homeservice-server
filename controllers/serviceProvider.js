@@ -16,7 +16,7 @@ const getAllServiceProviders = (req, res) => {
 const getServiceproviderById = (req, res) => {
   const id = req.params.id;
   pool
-    .query("SELECT * FROM serviceprovider WHERE categoryid=$1;", [id])
+    .query("SELECT * FROM serviceprovider WHERE serviceproviderid=$1;", [id])
     .then((data) => {
       //   console.log(data);
       if (data.rowCount === 0) {
