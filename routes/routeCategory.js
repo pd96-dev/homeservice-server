@@ -10,15 +10,16 @@ router.post(
   upload.single("file"),
   categoryImageController.uploadCategoryImage
 );
-router.get("/");
-// get all property images
-router.get("/property/:id", categoryImageController.getAllCategories);
 
-// get image with imageid
+// get all categories
+router.get("/", categoryImageController.getAllCategories);
+
+// get category image with category id
 router.get("/:id", categoryImageController.getCategoryById);
-// update image with imageid
-// router.put("/:id", propertyImageController.);
+
+// update category with category id
+// router.put("/:id", categoryImageController.updateCategory);
 //delete image with imageid
-router.delete("/:id", categoryImageController.updateCategory);
+router.delete("/:id", categoryImageController.deleteCategory);
 
 module.exports = router;

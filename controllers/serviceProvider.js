@@ -1,4 +1,7 @@
+const cloudinary = require("cloudinary").v2;
 const pool = require("../db");
+const path = require("path");
+const fs = require("fs");
 
 const getAllServiceProviders = (req, res) => {
   pool
@@ -13,7 +16,7 @@ const getAllServiceProviders = (req, res) => {
 const getServiceproviderById = (req, res) => {
   const id = req.params.id;
   pool
-    .query("SELECT * FROM serviceprovider WHERE serviceproviderid=$1;", [id])
+    .query("SELECT * FROM serviceprovider WHERE categoryid=$1;", [id])
     .then((data) => {
       //   console.log(data);
       if (data.rowCount === 0) {
@@ -24,12 +27,49 @@ const getServiceproviderById = (req, res) => {
     .catch((e) => res.status(500).json({ message: e.message }));
 };
 
-const createServiceprovider = (req, res) => {
-  const { firstname, lastname, email, username, phone, city } = req.body; // form data from body
+const createServiceprovider = async (req, res) => {
+  const { buffer, originalname } = req.file;
+  const {
+    firstname,
+    lastname,
+    email,
+    username,
+    phone,
+    city,
+    categoryid,
+    description,
+  } = req.body; // form data from body
+
+  // Upload image to Cloudinary and get secure_url
+  // Convert the buffer to a file path string
+  const filePath = path.join(__dirname, "/../uploads", originalname);
+  fs.writeFileSync(filePath, buffer);
+
+  // Upload the file to Cloudinary
+  const result = await cloudinary.uploader.upload(filePath, {
+    public_id: originalname,
+  });
+
+  // Delete the local file after uploading to Cloudinary
+  fs.unlinkSync(filePath);
+
+  // get secure_url to be stored in postgraysql database
+  const image = result.secure_url;
+
   pool
     .query(
-      "INSERT INTO serviceprovider (firstname ,lastname, email,	username, phone , city) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;",
-      [firstname, lastname, email, username, phone, city]
+      "INSERT INTO serviceprovider (firstname ,lastname, email,	username, phone , city, image, categoryid, description) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *;",
+      [
+        firstname,
+        lastname,
+        email,
+        username,
+        phone,
+        city,
+        image,
+        categoryid,
+        description,
+      ]
     )
     .then((data) => {
       console.log(data);
@@ -40,11 +80,32 @@ const createServiceprovider = (req, res) => {
 
 const updateServiceprovider = (req, res) => {
   const id = req.params.id;
-  const { firstname, lastname, email, username, phone, city } = req.body; // form data from body
+  const {
+    firstname,
+    lastname,
+    email,
+    username,
+    phone,
+    city,
+    image,
+    categoryid,
+    description,
+  } = req.body; // form data from body
   pool
     .query(
-      "UPDATE serviceprovider SET firstname=$1,lastname=$2,email=$3 ,username=$4,phone=$5, city=$6 WHERE serviceproviderid=$7 RETURNING *;",
-      [firstname, lastname, email, username, phone, city, id]
+      "UPDATE serviceprovider SET firstname=$1, lastname=$2, email=$3, username=$4, phone=$5, city=$6, image=$7, categoryid=$8, description=$9 WHERE serviceproviderid=$10 RETURNING *;",
+      [
+        firstname,
+        lastname,
+        email,
+        username,
+        phone,
+        city,
+        image,
+        categoryid,
+        description,
+        id,
+      ]
     )
     .then((data) => {
       console.log(data);
