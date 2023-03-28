@@ -21,6 +21,7 @@ const cors = require("cors");
 const usersRouter = require("./routes/routeUsers");
 const propertyRouter = require("./routes/routeProperty");
 const propertyImageRouter = require("./routes/routePropertyImage");
+const taskRouter= require('./routes/routeTask')
 const categoryRouter = require("./routes/routeCategory");
 const serviceProviderRouter = require("./routes/routeServiceProvider");
 const quoteRouter = require("./routes/routeQuote");
@@ -39,8 +40,8 @@ app.use(cors());
 //Register and login
 app.use("/api/auth", require("./routes/jwtAuth"));
 app.use("/api/users", usersRouter);
+app.use("/api/task", taskRouter);
 app.use("/api/admin", require("./routes/admin"));
-
 app.use("/api/property", propertyRouter);
 app.use("/api/propertyImage", propertyImageRouter);
 app.use("/api/category", categoryRouter);
