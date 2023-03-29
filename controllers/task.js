@@ -13,7 +13,6 @@ const getAllTasksProperty = (req, res) => {
 };
 
 const getAllTasks = (req, res) => {
-    const id = req.params.id;
     pool
       .query("SELECT * FROM task;")
       .then((data) => {
@@ -82,8 +81,8 @@ const deleteTask = (req, res) => {
   };
 
 module.exports = {
-    getAllTasks,
     getAllTasksProperty,
+    getAllTasks,
     getTaskById,
     createTask,
     updateTask,
