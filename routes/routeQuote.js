@@ -10,7 +10,7 @@ const {
 
 router.get("/serviceprovider/:id", getAllQuotes);
 router.get("/:id", getQuoteById);
-router.post("/add", createQuote);
+router.post("/", createQuote);
 router.put("/:id", updateQuote);
 router.delete("/:id", deleteQuote);
 
