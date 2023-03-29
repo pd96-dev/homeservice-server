@@ -1,9 +1,20 @@
 const pool = require("../db");
 
+
+const getAllTasksProperty = (req, res) => {
+  const id = req.params.id;
+  pool
+    .query("SELECT * FROM task WHERE propertyid=$1 ;", [id])
+    .then((data) => {
+      console.log(data);
+      res.json(data.rows);
+    })
+    .catch((e) => res.status(500).json({ message: e.message }));
+};
+
 const getAllTasks = (req, res) => {
-    const id = req.params.id;
     pool
-      .query("SELECT * FROM task WHERE propertyid=$1 ;", [id])
+      .query("SELECT * FROM task;")
       .then((data) => {
         console.log(data);
         res.json(data.rows);
@@ -70,6 +81,7 @@ const deleteTask = (req, res) => {
   };
 
 module.exports = {
+    getAllTasksProperty,
     getAllTasks,
     getTaskById,
     createTask,
