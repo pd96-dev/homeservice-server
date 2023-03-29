@@ -3,9 +3,13 @@ const pool = require("../db");
 const getAllProperties = (req, res) => {
     const id = req.params.id;
     pool
-      .query("SELECT * FROM property WHERE userid=$1;", [id])
+      .query(`SELECT property.propertyid, property.description, property.address, property.city, property.state, property.country, property.userid, property.zipcode, COUNT(task.taskid) as taskcount 
+      FROM property 
+      LEFT JOIN task ON task.propertyid = property.propertyid  
+      WHERE property.userid=$1 
+      GROUP BY property.propertyid;`, [id])
       .then((data) => {
-        console.log(data);
+        console.log("Whaaaaaat", data);
         res.json(data.rows);
       })
       .catch((e) => res.status(500).json({ message: e.message }));
