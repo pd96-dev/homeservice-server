@@ -38,21 +38,6 @@ const getTaskById = (req, res) => {
     .catch((e) => res.status(500).json({ message: e.message }));
 };
 
-// const createTask = (req, res) => {
-//     const id = req.params.id;
-//     const { title , description , status, date, propertyid } =
-//       req.body; // form data from body
-//     pool
-//       .query(
-//         "INSERT INTO task (title, description, status, date, propertyid) VALUES ($1,$2,$3,$4,$5) RETURNING *;",
-//         [ title, description, status, date, propertyid]
-//       )
-//       .then((data) => {
-//         console.log(data);
-//         res.status(201).json(data.rows[0]);
-//       })
-//       .catch((e) => res.status(500).json({ message: e.message }));
-//   };
 
 const createTask = async (req, res) => {
   console.log(req);
@@ -120,15 +105,17 @@ const updateTask = (req, res) => {
 };
 
 const deleteTask = (req, res) => {
-  const id = Number(req.params.id);
-  pool
-    .query("DELETE FROM task WHERE propertyid=$1 RETURNING *;", [id])
-    .then((data) => {
-      console.log(data);
-      res.json(data.rows[0]);
-    })
-    .catch((e) => res.status(500).json({ message: e.message }));
-};
+
+    const id = Number(req.params.id);
+    pool
+      .query("DELETE FROM task WHERE taskid=$1 RETURNING *;", [id])
+      .then((data) => {
+        console.log(data);
+        res.json(data.rows[0]);
+      })
+      .catch((e) => res.status(500).json({ message: e.message }));
+  };
+
 
 module.exports = {
   getAllTasksProperty,
