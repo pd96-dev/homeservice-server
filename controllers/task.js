@@ -6,7 +6,7 @@ const fs = require("fs");
 const getAllTasksProperty = (req, res) => {
   const id = req.params.id;
   pool
-    .query("SELECT * FROM task WHERE propertyid=$1 ;", [id])
+    .query("SELECT * FROM task  RIGHT JOIN categories ON task.categoryid = categories.categoryid WHERE propertyid=$1 ;", [id])
     .then((data) => {
       console.log(data);
       res.json(data.rows);
@@ -16,7 +16,7 @@ const getAllTasksProperty = (req, res) => {
 
 const getAllTasks = (req, res) => {
   pool
-    .query("SELECT * FROM task;")
+    .query("SELECT * FROM task RIGHT JOIN categories ON task.categoryid = categories.categoryid;")
     .then((data) => {
       console.log(data);
       res.json(data.rows);
@@ -46,7 +46,7 @@ const createTask = async (req, res) => {
   console.log("****");
 
   const { buffer, originalname } = req.file;
-  const { title, description, status, date, propertyid, imagedescription } =
+  const { title, description, status, date, propertyid, imagedescription, categoryid } =
     req.body; // form data from body
 
   // Upload image to Cloudinary and get secure_url
@@ -66,13 +66,13 @@ const createTask = async (req, res) => {
   const image = result.secure_url;
   console.log(image);
   console.log(
-    "INSERT INTO task ( title,description,status,date,propertyid,image,imagedescription) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;",
-    [title, description, status, date, propertyid, image, imagedescription]
+    "INSERT INTO task ( title,description,status,date,propertyid,image,imagedescription, categoryid) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *;",
+    [title, description, status, date, propertyid, image, imagedescription, categoryid]
   );
   pool
     .query(
-      "INSERT INTO task ( title,description,status,date,propertyid,image,imagedescription) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;",
-      [title, description, status, date, propertyid, image, imagedescription]
+      "INSERT INTO task ( title,description,status,date,propertyid,image,imagedescription, categoryid) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *;",
+      [title, description, status, date, propertyid, image, imagedescription, categoryid]
     )
     .then((data) => {
       console.log(data);
@@ -91,11 +91,12 @@ const updateTask = (req, res) => {
     propertyid,
     image,
     imagedescription,
+    categoryid,
   } = req.body; // form data from body
   pool
     .query(
-      "UPDATE task SET title=$1, description=$2, status=$3, date=$4 ,image=$5,imagedescription=$6 WHERE propertyid=$7 RETURNING *;",
-      [title, description, status, date, propertyid, image, imagedescription]
+      "UPDATE task SET title=$1, description=$2, status=$3, date=$4 ,image=$5, imagedescription=$6, categoryid=$7 WHERE propertyid=$8 RETURNING *;",
+      [title, description, status, date, propertyid, image, imagedescription, categoryid]
     )
     .then((data) => {
       console.log(data);
