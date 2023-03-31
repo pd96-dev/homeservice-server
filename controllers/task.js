@@ -6,7 +6,7 @@ const fs = require("fs");
 const getAllTasksProperty = (req, res) => {
   const id = req.params.id;
   pool
-    .query("SELECT * FROM task  RIGHT JOIN categories ON task.categoryid = categories.categoryid WHERE propertyid=$1 ;", [id])
+    .query("SELECT * FROM task INNER JOIN categories ON task.categoryid = categories.categoryid WHERE propertyid=$1 ;", [id])
     .then((data) => {
       console.log(data);
       res.json(data.rows);
@@ -16,7 +16,7 @@ const getAllTasksProperty = (req, res) => {
 
 const getAllTasks = (req, res) => {
   pool
-    .query("SELECT * FROM task RIGHT JOIN categories ON task.categoryid = categories.categoryid;")
+    .query("SELECT * FROM task INNER JOIN categories ON task.categoryid = categories.categoryid;")
     .then((data) => {
       console.log(data);
       res.json(data.rows);
