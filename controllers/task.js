@@ -27,7 +27,7 @@ const getAllTasks = (req, res) => {
 const getTaskById = (req, res) => {
   const id = req.params.id;
   pool
-    .query("SELECT * FROM task WHERE taskid=$1;", [id])
+    .query("select t.*, c.category from task t inner join categories c on  t.categoryid = c.categoryid where t.taskid=$1;", [id])
     .then((data) => {
       //   console.log(data);
       if (data.rowCount === 0) {
