@@ -27,7 +27,7 @@ const uploadCategoryImage = async (req, res) => {
 
     // Save secure_url and title to PostgreSQL database
     const query =
-      "INSERT INTO categories (category,	description,	categoryimage) VALUES ($1, $2, $3);";
+      "INSERT INTO categories (category,	categorydescription,	categoryimage) VALUES ($1, $2, $3);";
     const values = [category, description, image];
     await pool.query(query, values);
     console.log(
