@@ -27,7 +27,7 @@ const uploadCategoryImage = async (req, res) => {
 
     // Save secure_url and title to PostgreSQL database
     const query =
-      "INSERT INTO categories (category,	description,	image) VALUES ($1, $2, $3);";
+      "INSERT INTO categories (category,	categorydescription,	categoryimage) VALUES ($1, $2, $3);";
     const values = [category, description, image];
     await pool.query(query, values);
     console.log(
@@ -68,7 +68,7 @@ const creatCategory = (req, res) => {
   const { category, description, image } = req.body; // form data from body
   pool
     .query(
-      "INSERT INTO categories (category,	description,	image) VALUES ($1,$2,$3) RETURNING *;",
+      "INSERT INTO categories (category,	categorydescription,	categoryimage) VALUES ($1,$2,$3) RETURNING *;",
       [category, description, image]
     )
     .then((data) => {
@@ -83,7 +83,7 @@ const updateCategory = (req, res) => {
   const { category, description, image } = req.body; // form data from body
   pool
     .query(
-      "UPDATE categories SET category=$1,description=$2,image=$3 WHERE categoryid=$4 RETURNING *;",
+      "UPDATE categories SET category=$1,categorydescription=$2,categoryimage=$3 WHERE categoryid=$4 RETURNING *;",
       [category, description, image, id]
     )
     .then((data) => {
