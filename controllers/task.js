@@ -27,7 +27,7 @@ const getAllTasks = (req, res) => {
 const getTaskById = (req, res) => {
   const id = req.params.id;
   pool
-    .query("SELECT * FROM task WHERE propertyid=$1;", [id])
+    .query("SELECT * FROM task WHERE taskid=$1;", [id])
     .then((data) => {
       //   console.log(data);
       if (data.rowCount === 0) {
