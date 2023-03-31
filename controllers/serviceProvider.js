@@ -5,7 +5,7 @@ const fs = require("fs");
 
 const getAllServiceProviders = (req, res) => {
   pool
-    .query("SELECT * FROM serviceprovider;")
+    .query("SELECT * FROM serviceprovider INNER JOIN categories ON serviceprovider.categoryid = categories.categoryid;")
     .then((data) => {
       console.log(data);
       res.json(data.rows);
@@ -16,7 +16,7 @@ const getAllServiceProviders = (req, res) => {
 const getServiceproviderById = (req, res) => {
   const id = req.params.id;
   pool
-    .query("SELECT * FROM serviceprovider WHERE serviceproviderid=$1;", [id])
+    .query("SELECT * FROM serviceprovider INNER JOIN categories ON serviceprovider.categoryid = categories.categoryid WHERE serviceproviderid=$1;", [id])
     .then((data) => {
       //   console.log(data);
       if (data.rowCount === 0) {
