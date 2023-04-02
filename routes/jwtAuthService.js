@@ -37,9 +37,9 @@ router.post("/register", validInfo, async (req, res) => {
 
         // 5 Generating JWT token
 
-        const jwtToken = jwtGenerator(newUser.rows[0].userid);
+        const jwtToken = jwtGenerator(newUser.rows[0].serviceproviderid);
 
-        const userId = newUser.rows[0].userid;
+        const userId = newUser.rows[0].serviceproviderid;
 
         return res.json({ jwtToken, userId });
 
@@ -72,9 +72,9 @@ router.post("/login", validInfo, async (req, res) => {
         return res.status(401).json("Invalid Credential");
       }
 
-      const userId = user.rows[0].userid;
+      const userId = user.rows[0].serviceproviderid;
 
-      const jwtToken = jwtGenerator(user.rows[0].userid);
+      const jwtToken = jwtGenerator(user.rows[0].serviceproviderid);
 
       return res.json({ jwtToken, userId });
 
