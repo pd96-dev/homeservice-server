@@ -39,9 +39,11 @@ app.use(cors());
 
 //Register and login
 app.use("/api/auth", require("./routes/jwtAuth"));
+app.use("/api/authService", require("./routes/jwtAuthService"));
 app.use("/api/users", usersRouter);
 app.use("/api/task", taskRouter);
 app.use("/api/admin", require("./routes/admin"));
+app.use("/api/adminService", require("./routes/adminService"));
 app.use("/api/property", propertyRouter);
 app.use("/api/propertyImage", propertyImageRouter);
 app.use("/api/category", categoryRouter);
