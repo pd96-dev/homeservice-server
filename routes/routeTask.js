@@ -14,7 +14,7 @@ router.get("/property/:id", getAllTasksProperty);
 router.get("/", getAllTasks);
 router.get("/:id", getTaskById);
 router.post("/add", upload.single("file"), createTask);
-router.put("/:id", updateTask);
+router.put("/:id", upload.single("file"), updateTask);
 router.delete("/:id", deleteTask);
 
 module.exports = router;
