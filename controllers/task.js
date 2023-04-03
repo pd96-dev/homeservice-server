@@ -6,7 +6,10 @@ const fs = require("fs");
 const getAllTasksProperty = (req, res) => {
   const id = req.params.id;
   pool
-    .query("SELECT * FROM task INNER JOIN categories ON task.categoryid = categories.categoryid WHERE propertyid=$1 ;", [id])
+    .query(
+      "SELECT * FROM task INNER JOIN categories ON task.categoryid = categories.categoryid WHERE propertyid=$1 ;",
+      [id]
+    )
     .then((data) => {
       console.log(data);
       res.json(data.rows);
@@ -16,7 +19,9 @@ const getAllTasksProperty = (req, res) => {
 
 const getAllTasks = (req, res) => {
   pool
-    .query("SELECT * FROM task INNER JOIN categories ON task.categoryid = categories.categoryid;")
+    .query(
+      "SELECT * FROM task INNER JOIN categories ON task.categoryid = categories.categoryid;"
+    )
     .then((data) => {
       console.log(data);
       res.json(data.rows);
@@ -27,7 +32,10 @@ const getAllTasks = (req, res) => {
 const getTaskById = (req, res) => {
   const id = req.params.id;
   pool
-  .query("select t.*, c.category from task t inner join categories c on  t.categoryid = c.categoryid where t.taskid=$1;", [id])
+    .query(
+      "select t.*, c.category from task t inner join categories c on  t.categoryid = c.categoryid where t.taskid=$1;",
+      [id]
+    )
     .then((data) => {
       //   console.log(data);
       if (data.rowCount === 0) {
@@ -38,7 +46,6 @@ const getTaskById = (req, res) => {
     .catch((e) => res.status(500).json({ message: e.message }));
 };
 
-
 const createTask = async (req, res) => {
   console.log(req);
   console.log("****");
@@ -46,8 +53,15 @@ const createTask = async (req, res) => {
   console.log("****");
 
   const { buffer, originalname } = req.file;
-  const { title, description, status, date, propertyid, imagedescription, categoryid } =
-    req.body; // form data from body
+  const {
+    title,
+    description,
+    status,
+    date,
+    propertyid,
+    imagedescription,
+    categoryid,
+  } = req.body; // form data from body
 
   // Upload image to Cloudinary and get secure_url
   // Convert the buffer to a file path string
@@ -67,12 +81,30 @@ const createTask = async (req, res) => {
   console.log(image);
   console.log(
     "INSERT INTO task ( title,description,status,date,propertyid,image,imagedescription, categoryid) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *;",
-    [title, description, status, date, propertyid, image, imagedescription, categoryid]
+    [
+      title,
+      description,
+      status,
+      date,
+      propertyid,
+      image,
+      imagedescription,
+      categoryid,
+    ]
   );
   pool
     .query(
       "INSERT INTO task ( title,description,status,date,propertyid,image,imagedescription, categoryid) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *;",
-      [title, description, status, date, propertyid, image, imagedescription, categoryid]
+      [
+        title,
+        description,
+        status,
+        date,
+        propertyid,
+        image,
+        imagedescription,
+        categoryid,
+      ]
     )
     .then((data) => {
       console.log(data);
@@ -80,7 +112,7 @@ const createTask = async (req, res) => {
     })
     .catch((e) => res.status(500).json({ message: e.message }));
 };
-
+//update task
 const updateTask = (req, res) => {
   const id = req.params.id;
   const {
@@ -96,7 +128,16 @@ const updateTask = (req, res) => {
   pool
     .query(
       "UPDATE task SET title=$1, description=$2, status=$3, date=$4 ,image=$5, imagedescription=$6, categoryid=$7 WHERE propertyid=$8 RETURNING *;",
-      [title, description, status, date, propertyid, image, imagedescription, categoryid]
+      [
+        title,
+        description,
+        status,
+        date,
+        propertyid,
+        image,
+        imagedescription,
+        categoryid,
+      ]
     )
     .then((data) => {
       console.log(data);
@@ -106,17 +147,15 @@ const updateTask = (req, res) => {
 };
 
 const deleteTask = (req, res) => {
-
-    const id = Number(req.params.id);
-    pool
-      .query("DELETE FROM task WHERE taskid=$1 RETURNING *;", [id])
-      .then((data) => {
-        console.log(data);
-        res.json(data.rows[0]);
-      })
-      .catch((e) => res.status(500).json({ message: e.message }));
-  };
-
+  const id = Number(req.params.id);
+  pool
+    .query("DELETE FROM task WHERE taskid=$1 RETURNING *;", [id])
+    .then((data) => {
+      console.log(data);
+      res.json(data.rows[0]);
+    })
+    .catch((e) => res.status(500).json({ message: e.message }));
+};
 
 module.exports = {
   getAllTasksProperty,
