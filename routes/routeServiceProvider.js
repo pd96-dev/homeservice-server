@@ -14,7 +14,7 @@ const {
 router.get("/", getAllServiceProviders);
 router.get("/:id", getServiceproviderById);
 router.post("/add", upload.single("file"), createServiceprovider);
-router.put("/:id", updateServiceprovider);
+router.put("/:id", upload.single("file"), updateServiceprovider);
 router.delete("/:id", deleteServiceprovider);
 
 module.exports = router;
