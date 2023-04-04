@@ -92,12 +92,9 @@ const createServiceprovider = async (req, res) => {
 };
 
 const updateServiceprovider = async (req, res) => {
-  // if (!req.file) {
-  //   return res.status(400).json({ message: "No file uploaded" });
-  // }
-  // const { buffer, originalname } = req.file;
   const serviceproviderid = req.params.id;
-  const {
+
+  let {
     firstname,
     lastname,
     email,
@@ -115,6 +112,9 @@ const updateServiceprovider = async (req, res) => {
 
   // check if the file is present in req --> upload file to cloudinary and update image with the cloudinary image url
   if (req.file) {
+    console.log(`Data from client: 
+     ${req.file}
+     `);
     const { buffer, originalname } = req.file;
 
     // Upload image to Cloudinary and get secure_url
@@ -126,13 +126,17 @@ const updateServiceprovider = async (req, res) => {
 
     const result = await cloudinary.uploader.upload(filePath, {
       public_id: originalname,
+      resource_type: "auto",
     });
 
     // Delete the local file after uploading to Cloudinary
     fs.unlinkSync(filePath);
 
     // get secure_url to be stored in postgraysql database
-    const image = result.secure_url;
+    image = result.secure_url;
+  } else {
+    // If no file was uploaded, use the existing image URL
+    image = req.body.image;
   }
   pool
     .query(
