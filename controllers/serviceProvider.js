@@ -3,6 +3,18 @@ const pool = require("../db");
 const path = require("path");
 const fs = require("fs");
 
+const getAllServiceProvidersCategory = (req, res) => {
+  const id = req.params.id;
+  pool
+    .query("SELECT * FROM serviceprovider INNER JOIN categories ON serviceprovider.categoryid = categories.categoryid WHERE serviceprovider.categoryid = $1;", [id])
+    .then((data) => {
+      console.log(data);
+      res.json(data.rows);
+    })
+    .catch((e) => res.status(500).json({ message: e.message }));
+};
+
+
 const getAllServiceProviders = (req, res) => {
   pool
     .query("SELECT * FROM serviceprovider INNER JOIN categories ON serviceprovider.categoryid = categories.categoryid;")
@@ -129,6 +141,7 @@ const deleteServiceprovider = (req, res) => {
 };
 
 module.exports = {
+  getAllServiceProvidersCategory,
   getAllServiceProviders,
   getServiceproviderById,
   createServiceprovider,

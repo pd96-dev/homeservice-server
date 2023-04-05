@@ -4,6 +4,7 @@ const multer = require("multer");
 const upload = multer();
 
 const {
+  getAllServiceProvidersCategory,
   getAllServiceProviders,
   getServiceproviderById,
   createServiceprovider,
@@ -11,6 +12,7 @@ const {
   deleteServiceprovider,
 } = require("../controllers/serviceProvider");
 
+router.get("/category/:id", getAllServiceProvidersCategory);
 router.get("/", getAllServiceProviders);
 router.get("/:id", getServiceproviderById);
 router.post("/add", upload.single("file"), createServiceprovider);
