@@ -42,7 +42,7 @@ const uploadCategoryImage = async (req, res) => {
 
 const getAllCategories = (req, res) => {
   pool
-    .query("SELECT * FROM categories;")
+    .query("SELECT * FROM categories ORDER BY category ASC;")
     .then((data) => {
       console.log(data);
       res.json(data.rows);

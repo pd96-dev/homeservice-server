@@ -21,7 +21,21 @@ const getAllTasksProperty = (req, res) => {
 const getAllTasks = (req, res) => {
   pool
     .query(
-      "SELECT * FROM task INNER JOIN categories ON task.categoryid = categories.categoryid;"
+      "SELECT *,(SELECT COUNT(*) FROM quotes WHERE quotes.taskid = task.taskid) AS quote_count FROM task INNER JOIN categories ON task.categoryid = categories.categoryid;"
+    )
+    .then((data) => {
+      console.log(data);
+      res.json(data.rows);
+    })
+    .catch((e) => res.status(500).json({ message: e.message }));
+};
+
+const getTaskByCategoryId = (req, res) => {
+  const id = req.params.id;
+  pool
+    .query(
+      "SELECT *, task.description, property.description AS propertydescription, (SELECT COUNT(*) FROM quotes WHERE quotes.taskid = task.taskid) AS quote_count FROM task  INNER JOIN categories ON task.categoryid = categories.categoryid INNER JOIN property ON task.propertyid = property.propertyid WHERE task.categoryid = $1;",
+      [id]
     )
     .then((data) => {
       console.log(data);
@@ -34,7 +48,7 @@ const getTaskById = (req, res) => {
   const id = req.params.id;
   pool
     .query(
-      "select t.*, c.category from task t inner join categories c on  t.categoryid = c.categoryid where t.taskid=$1;",
+      "SELECT *, task.description, property.description AS propertydescription, (SELECT COUNT(*) FROM quotes WHERE quotes.taskid = task.taskid) AS quote_count FROM task INNER JOIN categories ON task.categoryid = categories.categoryid INNER JOIN property ON task.propertyid = property.propertyid WHERE task.taskid =$1;",
       [id]
     )
     .then((data) => {
@@ -191,6 +205,7 @@ const deleteTask = (req, res) => {
 };
 
 module.exports = {
+  getTaskByCategoryId,
   getAllTasksProperty,
   getAllTasks,
   getTaskById,
