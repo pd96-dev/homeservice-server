@@ -3,7 +3,7 @@ const pool = require("../db");
 const getAllQuotes = (req, res) => {
   const id = req.params.id;
   pool
-    .query("SELECT * FROM quotes WHERE serviceproviderid=$1;", [id])
+    .query("SELECT quoteid, quotes.description AS quotedescription, duedate, price, approval, serviceproviderid, title, task.description AS taskdescription , status, date, categoryid, image, address, city, state, country, zipcode  FROM quotes INNER JOIN task ON task.taskid = quotes.taskid INNER JOIN property ON task.propertyid = property.propertyid WHERE serviceproviderid=$1;", [id])
     .then((data) => {
       console.log(data);
       res.json(data.rows);
