@@ -3,17 +3,55 @@ const pool = require("../db");
 const path = require("path");
 const fs = require("fs");
 
+// const getSearch = (req, res) => {
+//   const keyword = req.params.keyword;
+
+//   pool
+//     .query(
+//       "(SELECT *FROM serviceprovider WHERE (LOWER(firstname) LIKE '%k%' OR LOWER(lastname) LIKE '%k%') AND city = 'Hamburg')",
+//       [keyword]
+//     )
+//     .then((data) => {
+//       console.log(data);
+//       if (data.rowCount === 0) {
+//         res.status(404).json({ message: "serviceprovider not found" });
+//       }
+//       res.json(data.rows);
+//     })
+//     .catch((e) => res.status(500).json({ message: e.message }));
+// };
+const getSearch = (req, res) => {
+  const cityId = req.query.city;
+  const categoryId = req.query.category;
+  const keyword = req.query.keyword;
+
+  pool
+    .query(
+      "SELECT * FROM serviceprovider WHERE LOWER(firstname) LIKE $1 OR LOWER(lastname) LIKE $1 AND city = $2 AND category = $3",
+      [`%${keyword}%`, cityId, categoryId]
+    )
+    .then((data) => {
+      if (data.rowCount === 0) {
+        res.status(404).json({ message: "serviceprovider not found" });
+      }
+      res.json(data.rows);
+    })
+    .catch((e) => res.status(500).json({ message: e.message }));
+};
+
 const getAllServiceProvidersCategory = (req, res) => {
   const id = req.params.id;
   pool
-    .query("SELECT * FROM serviceprovider INNER JOIN categories ON serviceprovider.categoryid = categories.categoryid WHERE serviceprovider.categoryid = $1;", [id])
+    .query(
+      "SELECT * FROM serviceprovider INNER JOIN categories ON serviceprovider.categoryid = categories.categoryid WHERE serviceprovider.categoryid = $1;",
+      [id]
+    )
     .then((data) => {
       console.log(data);
       res.json(data.rows);
     })
     .catch((e) => res.status(500).json({ message: e.message }));
 };
-
 
 const getAllServiceProviders = (req, res) => {
   pool
@@ -191,6 +229,7 @@ const deleteServiceprovider = (req, res) => {
 };
 
 module.exports = {
+  getSearch,
   getAllServiceProvidersCategory,
   getAllServiceProviders,
   getServiceproviderById,
