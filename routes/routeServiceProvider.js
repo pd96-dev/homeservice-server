@@ -13,7 +13,7 @@ const {
   deleteServiceprovider,
 } = require("../controllers/serviceProvider");
 
-router.get("/search/:keyword", getSearch);
+router.get("/search/:keyword/:category/:city", getSearch);
 router.get("/category/:id", getAllServiceProvidersCategory);
 router.get("/", getAllServiceProviders);
 router.get("/:id", getServiceproviderById);
