@@ -8,7 +8,7 @@ const getAllTasksProperty = (req, res) => {
   const id = req.params.id;
   pool
     .query(
-      "SELECT * FROM task INNER JOIN categories ON task.categoryid = categories.categoryid WHERE propertyid=$1 ;",
+      "SELECT *,(SELECT COUNT(*) FROM quotes WHERE quotes.taskid = task.taskid) AS quote_count FROM task INNER JOIN categories ON task.categoryid = categories.categoryid WHERE propertyid=$1 ;",
       [id]
     )
     .then((data) => {

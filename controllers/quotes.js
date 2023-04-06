@@ -1,5 +1,17 @@
 const pool = require("../db");
 
+const getAllQuotesTaskId = (req, res) => {
+  const id = req.params.id;
+  pool
+    .query("SELECT quotes.quoteid, quotes.description AS quote_description, quotes.duedate, quotes.price, quotes.taskid, quotes.serviceproviderid, quotes.approval, serviceprovider.firstname, serviceprovider.lastname, serviceprovider.email, serviceprovider.phone, serviceprovider.address, serviceprovider.phone, serviceprovider.image, serviceprovider.categoryid, serviceprovider.state, serviceprovider.country, serviceprovider.zipcode, serviceprovider.city, category, categoryimage FROM quotes INNER JOIN serviceprovider ON quotes.serviceproviderid = serviceprovider.serviceproviderid INNER JOIN categories ON serviceprovider.categoryid = categories.categoryid WHERE taskid = $1;", [id])
+    .then((data) => {
+      console.log(data);
+      res.json(data.rows);
+    })
+    .catch((e) => res.status(500).json({ message: e.message }));
+};
+
+
 const getAllQuotes = (req, res) => {
   const id = req.params.id;
   pool
@@ -56,6 +68,22 @@ const updateQuote = (req, res) => {
     .catch((e) => res.status(500).json({ message: e.message }));
 };
 
+const approveQuote = (req, res) => {
+  const id = req.params.id;
+  const { approval } =
+    req.body; // form data from body
+  pool
+    .query(
+      "UPDATE quotes SET approval=$1  WHERE quoteid=$2 RETURNING *;",
+      [approval, id]
+    )
+    .then((data) => {
+      console.log(data);
+      res.status(201).json(data.rows[0]);
+    })
+    .catch((e) => res.status(500).json({ message: e.message }));
+};
+
 const deleteQuote = (req, res) => {
   const id = Number(req.params.id);
   pool
@@ -68,9 +96,11 @@ const deleteQuote = (req, res) => {
 };
 
 module.exports = {
+  getAllQuotesTaskId,
   getAllQuotes,
   getQuoteById,
   createQuote,
   updateQuote,
+  approveQuote,
   deleteQuote,
 };
