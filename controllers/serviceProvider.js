@@ -3,41 +3,56 @@ const pool = require("../db");
 const path = require("path");
 const fs = require("fs");
 
-// const getSearch = (req, res) => {
-//   const keyword = req.params.keyword;
 
-//   pool
-//     .query(
-//       "(SELECT *FROM serviceprovider WHERE (LOWER(firstname) LIKE '%k%' OR LOWER(lastname) LIKE '%k%') AND city = 'Hamburg')",
-//       [keyword]
-//     )
-//     .then((data) => {
-//       console.log(data);
-//       if (data.rowCount === 0) {
-//         res.status(404).json({ message: "serviceprovider not found" });
-//       }
-//       res.json(data.rows);
-//     })
-//     .catch((e) => res.status(500).json({ message: e.message }));
-// };
 const getSearch = (req, res) => {
-  const cityId = req.query.city;
-  const categoryId = req.query.category;
-  const keyword = req.query.keyword;
+  const keyword = req.params.keyword;
+  const category = req.params.category;
+  const city = req.params.city;
 
-  pool
+  if(category === "all" && city !== "all") {
+    pool
     .query(
-      "SELECT * FROM serviceprovider WHERE LOWER(firstname) LIKE $1 OR LOWER(lastname) LIKE $1 AND city = $2 AND category = $3",
-      [`%${keyword}%`, cityId, categoryId]
+      "SELECT * FROM serviceprovider INNER JOIN categories ON serviceprovider.categoryid = categories.categoryid WHERE LOWER(firstname) LIKE $1 OR LOWER(lastname) LIKE $1 AND LOWER(city) = $2",
+      [`%${keyword}%`, city]
     )
     .then((data) => {
-      if (data.rowCount === 0) {
-        res.status(404).json({ message: "serviceprovider not found" });
-      }
-      res.json(data.rows);
+
+      return res.json(data.rows);
     })
-    .catch((e) => res.status(500).json({ message: e.message }));
-};
+    .catch((e) =>  res.status(500).json({ message: e.message }));
+  } else if (category === "all" && city === "all" ) {
+    pool
+    .query(
+      "SELECT * FROM serviceprovider INNER JOIN categories ON serviceprovider.categoryid = categories.categoryid WHERE LOWER(firstname) LIKE $1 OR LOWER(lastname) LIKE $1 OR LOWER(city) LIKE $1 ",
+      [`%${keyword}%`]
+    )
+    .then((data) => {
+      return res.json(data.rows);
+    })
+    }
+    else if (city === "all" && category !== "all" ) {
+      pool
+      .query(
+        "SELECT * FROM serviceprovider INNER JOIN categories ON serviceprovider.categoryid = categories.categoryid WHERE LOWER(firstname) LIKE $1 OR LOWER(lastname) LIKE $1 AND serviceprovider.categoryid = $2",
+        [`%${keyword}%`, category]
+      )
+      .then((data) => {
+        return res.json(data.rows);
+      })
+      }
+  else {
+    pool
+      .query(
+        "SELECT * FROM serviceprovider INNER JOIN categories ON serviceprovider.categoryid = categories.categoryid WHERE LOWER(firstname) LIKE $1 OR LOWER(lastname) LIKE $1 AND LOWER(city) = $2 AND serviceprovider.categoryid = $3",
+        [`%${keyword}%`, city, category]
+      )
+      .then((data) => {
+
+        return res.json(data.rows);
+      })
+      .catch((e) =>  res.status(500).json({ message: e.message }));
+    }
+    };
 
 const getAllServiceProvidersCategory = (req, res) => {
   const id = req.params.id;
