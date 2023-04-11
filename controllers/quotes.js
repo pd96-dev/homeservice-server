@@ -15,7 +15,7 @@ const getAllQuotesTaskId = (req, res) => {
 const getAllQuotes = (req, res) => {
   const id = req.params.id;
   pool
-    .query("SELECT quoteid, quotes.description AS quotedescription, duedate, price, approval, serviceproviderid, title, task.description AS taskdescription, status, date, categoryid, image, address, city, state, country, zipcode, property.propertyid, users.firstname, users.lastname, users.email, users.phone FROM quotes INNER JOIN task ON task.taskid = quotes.taskid INNER JOIN property ON task.propertyid = property.propertyid INNER JOIN users ON users.userid = property.userid WHERE serviceproviderid=$1;", [id])
+    .query("SELECT quoteid, quotes.description AS quotedescription, duedate, price, approval, serviceproviderid, title, task.description AS taskdescription, status, date, categoryid, image, address, city, state, country, zipcode, property.propertyid, users.firstname, users.lastname, users.email, users.phone FROM quotes INNER JOIN task ON task.taskid = quotes.taskid INNER JOIN property ON task.propertyid = property.propertyid INNER JOIN users ON users.userid = property.userid WHERE serviceproviderid=$1 ORDER BY approval DESC;", [id])
     .then((data) => {
       console.log(data);
       res.json(data.rows);
